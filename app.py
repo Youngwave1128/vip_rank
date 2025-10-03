@@ -57,6 +57,20 @@ def reset():
     
     return redirect("/admin")
 
+@app.route("/delete_table", methods=["POST"])
+def delete_table():
+    table_num = int(request.form["table"])
+    tables[table_num] = 0  # 해당 테이블만 초기화
+    
+    # 모든 SSE 클라이언트에게 업데이트 알림 전송
+    for client in sse_clients:
+        try:
+            client.put("data: update\n\n")
+        except:
+            pass
+    
+    return redirect("/admin")
+
 @app.route("/events")
 def events():
     def event_stream():

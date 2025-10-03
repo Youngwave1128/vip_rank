@@ -76,6 +76,45 @@
       color: white;
     }
     
+    /* 선택된 테이블 강조 효과 */
+    .table-item.selected {
+      background: linear-gradient(145deg, #4CAF50, #45a049) !important;
+      color: white !important;
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+      border: 2px solid #4CAF50 !important;
+    }
+    
+    .table-item {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .table-item:hover {
+      transform: scale(1.02);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* 삭제 버튼 스타일 */
+    .delete-btn {
+      background: linear-gradient(145deg, #f44336, #d32f2f);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      margin-left: 10px;
+    }
+    
+    .delete-btn:hover {
+      background: linear-gradient(145deg, #d32f2f, #b71c1c);
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(244, 67, 54, 0.4);
+    }
+    
     .btn-group {
       display: flex;
       gap: 10px;
@@ -439,6 +478,7 @@
             <div class="table-item">
               <span>{% if table_num == 15 %}V1{% elif table_num == 16 %}V2{% elif table_num == 17 %}V3{% else %}{{ table_num }}번 테이블{% endif %}</span>
               <span>{{ "{:,}".format(price) }}원</span>
+              <button class="delete-btn" onclick="deleteTable({{ table_num }})">삭제</button>
             </div>
           {% endfor %}
         {% else %}
@@ -449,6 +489,10 @@
   </div>
   
   <form id="resetForm" action="/reset" method="POST" style="display: none;">
+  </form>
+  
+  <form id="deleteForm" action="/delete_table" method="POST" style="display: none;">
+    <input type="hidden" name="table" id="deleteTableNumber">
   </form>
   
   <script>
@@ -526,6 +570,19 @@
     function confirmReset() {
       if (confirm('정말로 모든 테이블을 초기화하시겠습니까?')) {
         document.getElementById('resetForm').submit();
+      }
+    }
+    
+    function deleteTable(tableNum) {
+      let tableName = tableNum;
+      if (tableNum == 15) tableName = 'V1';
+      else if (tableNum == 16) tableName = 'V2';
+      else if (tableNum == 17) tableName = 'V3';
+      else tableName = tableNum + '번 테이블';
+      
+      if (confirm(`${tableName}을(를) 삭제하시겠습니까?`)) {
+        document.getElementById('deleteTableNumber').value = tableNum;
+        document.getElementById('deleteForm').submit();
       }
     }
   </script>
