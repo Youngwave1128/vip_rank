@@ -76,22 +76,48 @@
       color: white;
     }
     
-    /* 선택된 테이블 강조 효과 */
-    .table-item.selected {
+    /* 선택된 테이블 강조 효과 - 원형 선택 표시 */
+    .table-btn.selected,
+    .vip-btn.selected {
       background: linear-gradient(145deg, #4CAF50, #45a049) !important;
       color: white !important;
-      transform: scale(1.05);
-      box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
-      border: 2px solid #4CAF50 !important;
+      transform: scale(1.1);
+      box-shadow: 0 0 25px rgba(76, 175, 80, 0.8);
+      border: 3px solid #4CAF50 !important;
+      position: relative;
     }
     
-    .table-item {
+    /* 선택된 테이블에 체크마크 추가 */
+    .table-btn.selected::after,
+    .vip-btn.selected::after {
+      content: "✓";
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #4CAF50;
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      border: 2px solid white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    
+    .table-btn,
+    .vip-btn {
       transition: all 0.3s ease;
       cursor: pointer;
+      position: relative;
     }
     
-    .table-item:hover {
-      transform: scale(1.02);
+    .table-btn:hover,
+    .vip-btn:hover {
+      transform: scale(1.05);
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
     
