@@ -71,6 +71,10 @@ def delete_table():
     
     return redirect("/admin")
 
+@app.route("/ping")
+def ping():
+    return "pong"
+
 @app.route("/events")
 def events():
     def event_stream():

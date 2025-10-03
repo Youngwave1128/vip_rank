@@ -243,7 +243,19 @@
     
     eventSource.onerror = function(event) {
       console.log('SSE connection error');
+      // 연결이 끊어지면 재연결 시도
+      setTimeout(() => {
+        location.reload();
+      }, 5000);
     };
+    
+    // 서버 유지를 위한 주기적 핑 (10분마다)
+    setInterval(() => {
+      fetch('/ping').catch(() => {
+        console.log('Ping failed, reloading...');
+        location.reload();
+      });
+    }, 10 * 60 * 1000); // 10분마다
   </script>
 </body>
 </html>
