@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>관리자 페이지 - VIP RANK</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+      color: #FFFFFF;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: 20px;
+    }
+    
+    .admin-container {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      padding: 40px;
+      border-radius: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    }
+    
+    .admin-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 40px;
+      color: #ffffff;
+      text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #333;
+      border-radius: 8px;
+      background: #222;
+      color: white;
+      font-size: 16px;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+    
+    .form-group select option {
+      background: #222;
+      color: white;
+    }
+    
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 30px;
+    }
+    
+    .btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: opacity 0.3s;
+    }
+    
+    .update-btn {
+      background: linear-gradient(145deg, #ffffff, #f0f0f0);
+      color: #333;
+      border: 2px solid #ffffff;
+    }
+    
+    .reset-btn {
+      background-color: #ff4444;
+      color: white;
+    }
+    
+    .back-btn {
+      background-color: #666;
+      color: white;
+      margin-top: 20px;
+      width: 100%;
+      padding: 15px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #777;
+      transition: all 0.3s;
+    }
+    
+    .back-btn:hover {
+      background-color: #777;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    
+    .btn:hover {
+      opacity: 0.8;
+    }
+    
+    .current-tables {
+      margin-top: 30px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 25px;
+      border-radius: 15px;
+      border: 1px solid #333;
+    }
+    
+    .current-tables h3 {
+      margin-bottom: 15px;
+      color: #ffffff;
+    }
+    
+    .table-list {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    
+    .table-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #333;
+    }
+    
+    .table-item:last-child {
+      border-bottom: none;
+    }
+    
+    .layout-container {
+      margin-bottom: 30px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .layout-section {
+      background: linear-gradient(145deg, #2a2a2a, #1e1e1e);
+      padding: 35px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      min-height: 500px;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .dj-box {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #666;
+      padding: 12px 25px;
+      border-radius: 8px;
+      border: 1px solid #888;
+      font-weight: bold;
+      font-size: 16px;
+      color: #222;
+      text-transform: uppercase;
+    }
+    
+    .tables-section {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 80px;
+      margin-bottom: 40px;
+      padding: 0 50px;
+    }
+    
+    .tables-column {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+    }
+    
+    .table-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      background: linear-gradient(145deg, #ffffff, #f0f0f0);
+      color: #222;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .table-btn:hover {
+      border-color: #ffffff;
+      transform: scale(1.05) translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+    }
+    
+    .table-btn.selected {
+      background: linear-gradient(145deg, #ffffff, #f0f0f0);
+      border-color: #ffffff;
+      color: #333;
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
+    }
+    
+    .bar-section {
+      position: absolute;
+      right: 30px;
+      top: 100px;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      color: #222;
+      font-weight: bold;
+      font-size: 18px;
+      padding: 15px 10px;
+      border: 2px solid #ffd700;
+      border-radius: 8px;
+      background: #ffd700;
+      text-transform: uppercase;
+    }
+    
+    .vip-section {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 30px;
+    }
+    
+    .vip-btn {
+      width: 80px;
+      height: 50px;
+      border: 2px solid #ffd700;
+      background: #333;
+      color: #ffd700;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.3s;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 10;
+    }
+    
+    .vip-btn:nth-child(1) {
+      margin-left: -30px;
+    }
+    
+    .vip-btn:nth-child(3) {
+      margin-right: -30px;
+    }
+    
+    .vip-btn:hover {
+      background: linear-gradient(145deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+      transform: scale(1.05) translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 215, 0, 0.3);
+    }
+    
+    .vip-btn.selected {
+      background: linear-gradient(145deg, #ffd700, #ffed4e);
+      color: #333;
+      box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+    }
+    
+    .price-section {
+      margin-bottom: 30px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .selected-table {
+      text-align: center;
+      margin: 15px 0;
+      font-size: 16px;
+      color: #ffffff;
+      font-weight: bold;
+    }
+    
+    .price-buttons {
+      margin: 20px 0;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .price-buttons h4 {
+      color: #ffffff;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    
+    .price-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    
+    .price-btn {
+      padding: 12px 8px;
+      border: 2px solid #ffffff;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+    }
+    
+    .price-btn:hover {
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+      transform: scale(1.05) translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+    }
+    
+    .price-btn.selected {
+      background: linear-gradient(145deg, #ffffff, #f0f0f0);
+      color: #333;
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <h1 class="admin-title">모두들 파이팅!!😘</h1>
+    
+    <div class="layout-container">
+      <div class="layout-section">
+        <div class="dj-box">DJ BOX</div>
+        
+        <div class="tables-section">
+          <div class="tables-column">
+            <button class="table-btn" data-table="1">1</button>
+            <button class="table-btn" data-table="2">2</button>
+            <button class="table-btn" data-table="3">3</button>
+            <button class="table-btn" data-table="4">4</button>
+            <button class="table-btn" data-table="5">5</button>
+            <button class="table-btn" data-table="6">6</button>
+            <button class="table-btn" data-table="7">7</button>
+          </div>
+          <div class="tables-column">
+            <button class="table-btn" data-table="8">8</button>
+            <button class="table-btn" data-table="9">9</button>
+            <button class="table-btn" data-table="10">10</button>
+            <button class="table-btn" data-table="11">11</button>
+            <button class="table-btn" data-table="12">12</button>
+            <button class="table-btn" data-table="13">13</button>
+            <button class="table-btn" data-table="14">14</button>
+          </div>
+        </div>
+        
+        <div class="bar-section">BAR</div>
+        
+        <div class="vip-section">
+          <button class="vip-btn" data-table="15">V1</button>
+          <button class="vip-btn" data-table="16">V2</button>
+          <button class="vip-btn" data-table="17">V3</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="price-section">
+      <div class="form-group">
+        <label for="price">추가할 금액</label>
+        <input type="number" id="price" name="price" placeholder="금액을 입력하세요" min="0" required>
+      </div>
+      
+      <div class="price-buttons">
+        <h4>빠른 가격 선택</h4>
+        <div class="price-grid">
+          <button class="price-btn" data-price="119000">119,000원</button>
+          <button class="price-btn" data-price="129000">129,000원</button>
+          <button class="price-btn" data-price="139000">139,000원</button>
+          <button class="price-btn" data-price="199000">199,000원</button>
+          <button class="price-btn" data-price="230000">230,000원</button>
+          <button class="price-btn" data-price="279000">279,000원</button>
+          <button class="price-btn" data-price="800000">800,000원</button>
+          <button class="price-btn" data-price="1200000">1,200,000원</button>
+        </div>
+      </div>
+      
+      <div class="selected-table">
+        선택된 테이블: <span id="selected-table-number">없음</span>
+      </div>
+      
+      <div class="btn-group">
+        <button type="button" class="btn update-btn" onclick="updateTable()">업데이트</button>
+        <button type="button" class="btn reset-btn" onclick="confirmReset()">전체 리셋</button>
+      </div>
+    </div>
+    
+    <div class="current-tables">
+      <h3>현재 테이블 현황</h3>
+      <div class="table-list">
+        {% if tables %}
+          {% for table_num, price in tables.items() %}
+            <div class="table-item">
+              <span>{% if table_num == 15 %}V1{% elif table_num == 16 %}V2{% elif table_num == 17 %}V3{% else %}{{ table_num }}번 테이블{% endif %}</span>
+              <span>{{ "{:,}".format(price) }}원</span>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="table-item">입력된 테이블이 없습니다.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  
+  <form id="resetForm" action="/reset" method="POST" style="display: none;">
+  </form>
+  
+  <script>
+    let selectedTable = null;
+    
+    // 테이블 버튼 클릭 이벤트
+    document.querySelectorAll('.table-btn, .vip-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        // 이전 선택 해제
+        document.querySelectorAll('.table-btn, .vip-btn').forEach(b => b.classList.remove('selected'));
+        
+        // 현재 버튼 선택
+        this.classList.add('selected');
+        selectedTable = this.getAttribute('data-table');
+        
+        // 선택된 테이블 표시
+        let displayText = selectedTable;
+        if (selectedTable == 15) displayText = 'V1';
+        else if (selectedTable == 16) displayText = 'V2';
+        else if (selectedTable == 17) displayText = 'V3';
+        else displayText = selectedTable + '번 테이블';
+        
+        document.getElementById('selected-table-number').textContent = displayText;
+      });
+    });
+    
+    // 가격 버튼 클릭 이벤트
+    document.querySelectorAll('.price-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        // 이전 선택 해제
+        document.querySelectorAll('.price-btn').forEach(b => b.classList.remove('selected'));
+        
+        // 현재 버튼 선택
+        this.classList.add('selected');
+        const price = this.getAttribute('data-price');
+        
+        // 가격 입력 필드에 값 설정
+        document.getElementById('price').value = price;
+      });
+    });
+    
+    function updateTable() {
+      if (!selectedTable) {
+        alert('테이블을 선택해주세요.');
+        return;
+      }
+      
+      const price = document.getElementById('price').value;
+      if (!price || price <= 0) {
+        alert('금액을 입력해주세요.');
+        return;
+      }
+      
+      // 폼 생성하여 제출
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '/update';
+      
+      const tableInput = document.createElement('input');
+      tableInput.type = 'hidden';
+      tableInput.name = 'table';
+      tableInput.value = selectedTable;
+      
+      const priceInput = document.createElement('input');
+      priceInput.type = 'hidden';
+      priceInput.name = 'price';
+      priceInput.value = price;
+      
+      form.appendChild(tableInput);
+      form.appendChild(priceInput);
+      document.body.appendChild(form);
+      form.submit();
+    }
+    
+    function confirmReset() {
+      if (confirm('정말로 모든 테이블을 초기화하시겠습니까?')) {
+        document.getElementById('resetForm').submit();
+      }
+    }
+  </script>
+</body>
+</html>

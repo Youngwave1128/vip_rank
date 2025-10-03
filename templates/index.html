@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>VIP RANK</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body, html {
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      background: #000000;
+      color: #FFFFFF;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+    }
+    
+    .container {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #000000;
+      position: relative;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 5vh 5vw 3vh 5vw;
+      flex: 1;
+      position: relative;
+      min-height: 70vh;
+    }
+    
+    .left-section {
+      flex: 1;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .right-section {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+      margin: 0;
+      padding: 0;
+    }
+    
+    
+    .vip-title {
+      font-size: 4rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      line-height: 1;
+      margin-top: 70px;
+    }
+    
+    .subtitle {
+      font-size: 1.2rem;
+      font-weight: normal;
+      margin-bottom: 40px;
+    }
+    
+    .rank-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .rank-item {
+      font-weight: bold;
+      margin-bottom: 25px;
+      text-align: right;
+    }
+    
+    .rank-list {
+      margin-top: 15vh;
+      margin-right: 3vw;
+    }
+    
+    .rank-item:nth-child(1) {
+      font-size: 5rem;
+    }
+    
+    .rank-item:nth-child(2) {
+      font-size: 4.5rem;
+    }
+    
+    .rank-item:nth-child(3) {
+      font-size: 4rem;
+    }
+    
+    .rank-item:nth-child(4) {
+      font-size: 3.5rem;
+    }
+    
+    .rank-item:nth-child(5) {
+      font-size: 3rem;
+    }
+    
+    .footer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2vh 5vw 3vh 5vw;
+      height: 25vh;
+      justify-content: flex-end;
+    }
+    
+    .pineapple-logo {
+      width: 20vw;
+      height: auto;
+      margin-bottom: 0.5vh;
+      object-fit: contain;
+    }
+    
+    .brand-title {
+      font-size: 2rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+    
+    .brand-subtitle {
+      font-size: 0.9rem;
+      font-weight: normal;
+      text-transform: uppercase;
+    }
+    
+    .vip-word-image {
+      width: 100%;
+      max-width: 40vw;
+      margin-top: 15vh;
+      margin-left: 3vw;
+    }
+    
+    
+    /* 1등 랭크 아이템 강조 */
+    .rank-item.first-place {
+      animation: firstPlaceGlow 2s ease-in-out infinite alternate;
+      text-shadow: 0 0 20px #FFD700;
+    }
+    
+    /* 2등 랭크 아이템 강조 */
+    .rank-item.second-place {
+      animation: secondPlaceGlow 2s ease-in-out infinite alternate;
+      text-shadow: 0 0 20px #C0C0C0;
+    }
+    
+    /* 3등 랭크 아이템 강조 */
+    .rank-item.third-place {
+      animation: thirdPlaceGlow 2s ease-in-out infinite alternate;
+      text-shadow: 0 0 20px #CD7F32;
+    }
+    
+    @keyframes firstPlaceGlow {
+      0% { 
+        color: #FFFFFF;
+        text-shadow: 0 0 20px #FFD700;
+      }
+      100% { 
+        color: #FFD700;
+        text-shadow: 0 0 30px #FFD700, 0 0 40px #FFD700;
+      }
+    }
+    
+    @keyframes secondPlaceGlow {
+      0% { 
+        color: #FFFFFF;
+        text-shadow: 0 0 20px #C0C0C0;
+      }
+      100% { 
+        color: #C0C0C0;
+        text-shadow: 0 0 30px #C0C0C0, 0 0 40px #C0C0C0;
+      }
+    }
+    
+    @keyframes thirdPlaceGlow {
+      0% { 
+        color: #FFFFFF;
+        text-shadow: 0 0 20px #CD7F32;
+      }
+      100% { 
+        color: #CD7F32;
+        text-shadow: 0 0 30px #CD7F32, 0 0 40px #CD7F32;
+      }
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="left-section">
+        <img src="/static/word.png" alt="VIP RANK" class="vip-word-image">
+      </div>
+      
+      <div class="right-section">
+        <ol class="rank-list">
+          {% if top5 %}
+          {% for i in range(1, top5|length + 1) %}
+            <li class="rank-item{% if i == 1 %} first-place{% elif i == 2 %} second-place{% elif i == 3 %} third-place{% endif %}">
+              {{ i }}. {% if top5[i-1][0] == 15 %}V1{% elif top5[i-1][0] == 16 %}V2{% elif top5[i-1][0] == 17 %}V3{% else %}{{ top5[i-1][0] }}텝{% endif %} ({{ "{:,}".format(top5[i-1][1]) }}원)
+            </li>
+          {% endfor %}
+          {% else %}
+            <li class="rank-item">😎</li>
+          {% endif %}
+        </ol>
+      </div>
+    </div>
+
+    <div class="footer">
+      <a href="/admin" target="_blank">
+        <img src="/static/pineapple-logo.png" alt="PINEAPPLE LOGO" class="pineapple-logo">
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // Server-Sent Events로 실시간 업데이트
+    const eventSource = new EventSource('/events');
+    
+    eventSource.onmessage = function(event) {
+      if (event.data === 'update') {
+        location.reload();
+      }
+    };
+    
+    eventSource.onerror = function(event) {
+      console.log('SSE connection error');
+    };
+  </script>
+</body>
+</html>
