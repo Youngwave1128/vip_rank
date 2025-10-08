@@ -24,7 +24,9 @@
       overflow: hidden;
       width: 100vw;
       height: 100vh;
+      position: relative;
     }
+    
     
     .container {
       width: 100vw;
@@ -35,6 +37,8 @@
       position: relative;
     }
     
+    
+    
     .header {
       display: flex;
       justify-content: space-between;
@@ -43,6 +47,7 @@
       flex: 1;
       position: relative;
       min-height: 70vh;
+      z-index: 1;
     }
     
     .left-section {
@@ -120,13 +125,15 @@
       padding: 2vh 5vw 3vh 5vw;
       height: 25vh;
       justify-content: flex-end;
+      z-index: 1;
     }
     
     .pineapple-logo {
-      width: 20vw;
+      width:35vw;
       height: auto;
       margin-bottom: 0.5vh;
       object-fit: contain;
+      mix-blend-mode: screen;
     }
     
     .brand-title {
@@ -143,17 +150,21 @@
     }
     
     .vip-image {
-      width: 20vw;
+      width: 18vw;
       margin-top: 10vh;
       margin-left: 2vw;
       object-fit: contain;
+      background: #000000;
+      background-blend-mode: screen;
     }
     
     .rank-image {
-      width: 35vw;
+      width: 32vw;
       margin-top: 2vh;
       margin-left: 2vw;
       object-fit: contain;
+      background: #000000;
+      background-blend-mode: screen;
     }
     
     
