@@ -9,7 +9,7 @@
     <p>잠시만 기다려 주세요.</p>
 
     <script>
-        async function handleCafe24OAuthCallback() {
+        async function handleCafe24Callback() {
             console.log("카페24 콜백 페이지 로드됨.");
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
@@ -27,15 +27,14 @@
                     });
 
                     if (!response.ok) {
-                        const errorDetails = await response.text();
-                        throw new Error(`백엔드 API 호출 실패: ${response.status} ${response.statusText} - ${errorDetails}`);
+                        throw new Error(`백엔드 API 호출 실패: ${response.status} ${response.statusText}`);
                     }
                     console.log("인증 코드를 백엔드로 성공적으로 전달했습니다.");
-                    alert("카페24 연동이 성공적으로 완료되었습니다. 백엔드 로그를 확인하십시오.");
+                    alert("카페24 연동이 성공적으로 완료되었습니다.");
                     window.location.href = "/"; // Redirect to home or a success page
                 } catch (error) {
                     console.error("인증 코드를 백엔드로 전달 중 에러 발생:", error);
-                    alert("카페24 연동 처리 중 오류가 발생했습니다: " + error.message);
+                    alert("카페24 연동 처리 중 오류가 발생했습니다.");
                     window.location.href = "/"; // Redirect to home or an error page
                 }
             } else {
@@ -45,7 +44,8 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', handleCafe24OAuthCallback);
+        // 페이지 로드 시 콜백 핸들러 자동 실행
+        window.onload = handleCafe24Callback;
     </script>
 </body>
 </html>
