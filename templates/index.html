@@ -253,52 +253,61 @@
   </div>
 
   <script>
-    // Server-Sent Events로 실시간 업데이트
+    // Server-Sent Events로 실시간 업데이트 (기존 코드)
     const eventSource = new EventSource('/events');
-    
     eventSource.onmessage = function(event) {
       if (event.data === 'update') {
         location.reload();
       }
     };
-    
     eventSource.onerror = function(event) {
       console.log('SSE connection error');
     };
-
-    // Cafe24 OAuth Callback Handler
-    async function handleCafe24Callback() {
+    // ==============================================================================
+    // Cafe24 OAuth Callback Handler (수정된 부분)
+    // ==============================================================================
+    async function handleCafe24OAuthCallback() {
+        console.log("프론트엔드 페이지 로드됨.");
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
-
+        const state = urlParams.get('state');
         if (code) {
-            console.log("인증 코드(Code) 획득:", code);
-            const backendBaseUrl = "http://localhost:8080"; // <<<--- 중요: 백엔드 URL 설정
+            console.log("URL에서 인증 코드(Code) 획득:", code);
+                        // 획득한 code를 사용했으므로, URL에서 code 파라미터를 제거하여 무한 루프 방지
+            // 이렇게 하지 않으면 페이지 새로고침 시 계속해서 백엔드 호출 로직이 실행될 수 있습니다.
+            window.history.replaceState({}, document.title, window.location.pathname);
+            // 중요: 백엔드 URL 설정 (로컬 테스트 시)
+            // inventory-server가 배포되면 이 URL을 http://52.79.83.108 로 변경해야 합니다.
+            const backendBaseUrl = "http://localhost:8080"; 
             try {
+                console.log("인증 코드를 백엔드로 전달 중...");
                 const response = await fetch(`${backendBaseUrl}/api/v1/oauth/cafe24/callback?code=${code}`, {
-                    method: 'GET',
+                    method: 'GET', // 백엔드 Cafe24OAuthController의 @GetMapping과 일치
                     headers: {
                         'Content-Type': 'application/json',
                     },
                 });
-
                 if (!response.ok) {
-                    throw new Error(`백엔드 API 호출 실패: ${response.status} ${response.statusText}`);
+                    // 백엔드에서 오류가 발생했을 경우 응답 본문을 읽어 에러 메시지를 표시
+                    const errorDetails = await response.text(); // JSON이 아닐 수 있으므로 text로 읽음
+                    throw new Error(`백엔드 API 호출 실패: ${response.status} ${response.statusText} - ${errorDetails}`);
                 }
                 console.log("인증 코드를 백엔드로 성공적으로 전달했습니다.");
-                alert("카페24 연동이 성공적으로 완료되었습니다.");
-                // Remove the 'code' parameter from the URL to prevent re-processing on refresh
-                window.history.replaceState({}, document.title, window.location.pathname);
+                alert("카페24 연동이 성공적으로 완료되었습니다. 백엔드 로그를 확인하십시오.");
+                // 백엔드에서 Access Token 발급 후 프론트엔드의 성공 페이지로 리다이렉션할 것이므로
+                // 여기서는 추가적인 리다이렉션을 하지 않습니다.
+                // 백엔드의 RedirectView가 작동했는지 브라우저 URL을 확인하십시오.
             } catch (error) {
                 console.error("인증 코드를 백엔드로 전달 중 에러 발생:", error);
-                alert("카페24 연동 처리 중 오류가 발생했습니다.");
-                window.history.replaceState({}, document.title, window.location.pathname);
+                alert("카페24 연동 처리 중 오류가 발생했습니다: " + error.message);
+                // 에러 발생 시 URL에서 code 파라미터가 이미 제거되었으므로, 추가 리다이렉션 없이 메시지 표시
             }
+        } else {
+            console.log("URL에 인증 코드가 없습니다. 일반 페이지 로드.");
         }
     }
-
-    // Run callback handler on page load
-    window.onload = handleCafe24Callback;
+    // 페이지 로드 시 콜백 핸들러 자동 실행
+    document.addEventListener('DOMContentLoaded', handleCafe24OAuthCallback);
   </script>
 </body>
 </html>
