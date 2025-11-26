@@ -28,10 +28,6 @@ def admin():
     sorted_tables = sorted(filtered_tables.items(), key=lambda x: (-x[1], x[0]))
     return render_template("admin.html", tables=dict(sorted_tables))
 
-@app.route("/cafe24-callback")
-def cafe24_callback():
-    return render_template("cafe24-callback.html")
-
 @app.route("/update", methods=["POST"])
 def update():
     table_num = int(request.form["table"])

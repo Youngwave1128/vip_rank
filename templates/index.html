@@ -265,6 +265,40 @@
     eventSource.onerror = function(event) {
       console.log('SSE connection error');
     };
+
+    // Cafe24 OAuth Callback Handler
+    async function handleCafe24Callback() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+
+        if (code) {
+            console.log("인증 코드(Code) 획득:", code);
+            const backendBaseUrl = "http://localhost:8080"; // <<<--- 중요: 백엔드 URL 설정
+            try {
+                const response = await fetch(`${backendBaseUrl}/api/v1/oauth/cafe24/callback?code=${code}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`백엔드 API 호출 실패: ${response.status} ${response.statusText}`);
+                }
+                console.log("인증 코드를 백엔드로 성공적으로 전달했습니다.");
+                alert("카페24 연동이 성공적으로 완료되었습니다.");
+                // Remove the 'code' parameter from the URL to prevent re-processing on refresh
+                window.history.replaceState({}, document.title, window.location.pathname);
+            } catch (error) {
+                console.error("인증 코드를 백엔드로 전달 중 에러 발생:", error);
+                alert("카페24 연동 처리 중 오류가 발생했습니다.");
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
+    }
+
+    // Run callback handler on page load
+    window.onload = handleCafe24Callback;
   </script>
 </body>
 </html>
